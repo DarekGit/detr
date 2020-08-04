@@ -4,27 +4,28 @@ Utilities for bounding box manipulation and GIoU.
 """
 import torch
 from torchvision.ops.boxes import box_area
-class Fix_box(torch.nn.Module):
+class Fix_boxs(torch.nn.Module):
   def __init__(self):
     super().__init__()
-    self.ext_raw = torch.ones((4,4)).float()
-    self.ext_wh = torch.tensor([[1,0,1,0],[0,1,0,1]]).float()
-    self.B_max = torch.tensor([0,0,1,1]).float()
 
-  def forward(self,boxs):
-    B = boxs #.clone()
-    self.mask_nan = (B!=B).float() @ self.ext_raw.to(boxs.device) > 0
-    B[self.mask_nan] = self.B_max.to(boxs.device).expand(boxs.size()).view(-1,4)[self.mask_nan]
-    self.mask_rep = (B[:,2:]<B[:,:2]).float()  @ self.ext_wh.to(boxs.device) ==1
-    B[self.mask_rep] = B[:,[2,3,0,1]][self.mask_rep]
-    return B
+  def forward(self,boxs): #placing max size in nan value, ordering of boxes coordinates
+    #if nan appears put all mask row to True
+    self.mask_nan = (boxs!=boxs).sum(axis=-1)[:,None].expand(*boxs.shape) > 0 
+    #for nan rows put box max size [0,0,1,1] 
+    boxs[self.mask_nan] = torch.tensor([0,0,1,1]*self.mask_nan[:,0].sum(), dtype=torch.float, device=boxs.device )
+
+    #for coordinates [l,t,r,b] if r < l or b < t put True for r,l and t,b respectively
+    self.mask_ord = (boxs[:,2:]<boxs[:,:2]).float()  @ torch.tensor([[1,0,1,0],[0,1,0,1]],dtype=torch.float, device=boxs.device) ==1
+    #for mask_ord put respectively [r,_,l,_] and [_,b,_,t]
+    boxs[self.mask_ord] = boxs[:,[2,3,0,1]][self.mask_ord]
+    return boxs
 
   def backward(self,input):
-    input[self.mask_rep] = input[:,[2,3,0,1]][self.mask_rep]
-    #input[self.mask_nan] = torch.zeros_like(input).float().to(input.device)[self.mask_nan]
+    input[self.mask_ord] = input[:,[2,3,0,1]][self.mask_ord] #back to input order
+    #input[self.mask_nan] = torch.zeros_like(input, device = input.device)[self.mask_nan] #gradient canceling for nan if necessary  
     return input
 
-fix_box=Fix_box()
+fix_boxs=Fix_boxs()
 
 
 def box_cxcywh_to_xyxy(x):
@@ -69,7 +70,7 @@ def generalized_box_iou(boxes1, boxes2):
     """
     # degenerate boxes gives inf / nan results
     # so do an early check
-    boxes1 = fix_box(boxes1)
+    boxes1 = fix_boxs(boxes1)
     assert (boxes1[:, 2:] >= boxes1[:, :2]).all()
     assert (boxes2[:, 2:] >= boxes2[:, :2]).all()
     iou, union = box_iou(boxes1, boxes2)
