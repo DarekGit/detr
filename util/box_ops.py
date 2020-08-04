@@ -4,6 +4,27 @@ Utilities for bounding box manipulation and GIoU.
 """
 import torch
 from torchvision.ops.boxes import box_area
+class Fix_box(torch.nn.Module):
+  def __init__(self):
+    super().__init__()
+    self.ext_raw = torch.ones((4,4)).float()
+    self.ext_wh = torch.tensor([[1,0,1,0],[0,1,0,1]]).float()
+    self.B_max = torch.tensor([0,0,1,1]).float()
+
+  def forward(self,boxs):
+    B = boxs #.clone()
+    self.mask_nan = (B!=B).float() @ self.ext_raw.to(boxs.device) > 0
+    B[self.mask_nan] = self.B_max.to(boxs.device).expand(boxs.size()).view(-1,4)[self.mask_nan]
+    self.mask_rep = (B[:,2:]<B[:,:2]).float()  @ self.ext_wh.to(boxs.device) ==1
+    B[self.mask_rep] = B[:,[2,3,0,1]][self.mask_rep]
+    return B
+
+  def backward(self,input):
+    input[self.mask_rep] = input[:,[2,3,0,1]][self.mask_rep]
+    #input[self.mask_nan] = torch.zeros_like(input).float().to(input.device)[self.mask_nan]
+    return input
+
+fix_box=Fix_box()
 
 
 def box_cxcywh_to_xyxy(x):
@@ -48,6 +69,7 @@ def generalized_box_iou(boxes1, boxes2):
     """
     # degenerate boxes gives inf / nan results
     # so do an early check
+    boxes1 = fix_box(boxes1)
     assert (boxes1[:, 2:] >= boxes1[:, :2]).all()
     assert (boxes2[:, 2:] >= boxes2[:, :2]).all()
     iou, union = box_iou(boxes1, boxes2)
