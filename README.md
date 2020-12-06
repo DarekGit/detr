@@ -1,7 +1,27 @@
 The [notebook]( https://github.com/DarekGit/detr/blob/master/WIDERFACE_Detectron2_DD_DeTr_R50_V2.ipynb ) presents a test of **DeTR** for facial recognition at the WiderFace set.<br>
-|   AP   |  AP50  |  AP75  |  APs  |  APm   |  APl   |<br>
-|:------:|:------:|:------:|:-----:|:------:|:------:|<br>
-| 19.125 | 40.477 | 16.039 | 3.337 | 32.703 | 55.223 |
+
+<table>
+  <thead>
+    <tr style="text-align: center;">
+      <th>AP</th>
+      <th>AP50</th>
+      <th>AP75</th>
+      <th>APs</th>
+      <th>APm</th>
+      <th>APl</th>
+    </tr> 
+  </thead>
+  <tbody>
+    <tr>
+      <td>19.125</td>
+      <td>40.477</td>
+      <td>16.039</td>
+      <td>3.337</td>
+      <td>32.703</td>
+      <td>55.223</td>
+    <tr>
+  </tbody>
+</table>  
 
 <br><br>
 **Observations:**
