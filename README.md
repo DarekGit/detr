@@ -1,4 +1,4 @@
-The notebook https://github.com/DarekGit/detr/blob/master/WIDERFACE_Detectron2_DD_DeTr_R50_V2.ipynb presents a test of usage **DeTR** for facial recognition at the WiderFace set.
+The [notebook]( https://github.com/DarekGit/detr/blob/master/WIDERFACE_Detectron2_DD_DeTr_R50_V2.ipynb ) presents a test of **DeTR** for facial recognition at the WiderFace set.
 <br><br>
 **Observations:**
 1. The proposed model works well for 100 objects in an image.
