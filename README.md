@@ -6,6 +6,7 @@ For the 2000 objects required for WiderFace, there is no learning capacity. It r
 2. In the case of tests limited to 100 objects per image, the AP results converge for large objects to the results for Faster R-CNN, are significantly worse for medium-sized objects and practically negligible for small objects. <br>
 Note that the tests were performed without augmentation.
 <br><br>
+
 **In case of  face detection, further work on DeTr is required to improve AP scores to the level of Faster R-CNN.**
 <br><br>
 
