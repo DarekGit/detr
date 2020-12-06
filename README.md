@@ -1,3 +1,11 @@
+The notebook presents a test of usage **DeTR** for facial recognition at the WiderFace set.
+<br><br>
+**Observations:**
+1. The proposed model works well for 100 objects in an image.
+For the 2000 objects required for WiderFace, there is no learning capacity. It remains to be verified whether the transformer in the proposed structure can achieve the required parameters. <br>
+2. In the case of tests limited to 100 objects per image, the AP results converge for large objects to the results for Faster R-CNN, are significantly worse for medium-sized objects and practically negligible for small objects. Note that the tests were performed without augmentation.
+<br>
+<br>
 **DE⫶TR**: End-to-End Object Detection with Transformers
 ========
 PyTorch training code and pretrained models for **DETR** (**DE**tection **TR**ansformer).
