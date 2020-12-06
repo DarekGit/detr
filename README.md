@@ -5,7 +5,7 @@ The [notebook]( https://github.com/DarekGit/detr/blob/master/WIDERFACE_Detectron
 For the 2000 objects required for WiderFace, there is no learning capacity. It remains to be verified whether the transformer in the proposed structure can achieve the required parameters. <br>
 2. In the case of tests limited to 100 objects per image, the AP results converge for large objects to the results for Faster R-CNN, are significantly worse for medium-sized objects  and practically negligible for small objects. <br>
 Note that the tests were performed without augmentation.<br>
-faster_rcnn_R_50_FPN_gn [results](https://github.com/DarekGit/FACES_DNN/blob/906780da787ad7544ad9895fbd785d12fa079690/notebooks/06_02_WIDERFACE_TEST.ipynb)-  AP:	31.40;  AP50:	57.14: APs:	31.57; 	APm: 21.64; 	APm:53.46; 	APl: 61.38
+faster_rcnn_R_50_FPN_gn [results](https://github.com/DarekGit/FACES_DNN/blob/906780da787ad7544ad9895fbd785d12fa079690/notebooks/06_02_WIDERFACE_TEST.ipynb)-  AP:	31.40;  AP50:	57.14: AP75:	31.57; 	APs: 21.64; 	APm:53.46; 	APl: 61.38
 <br><br>
 
 **In case of  face detection, further work on DeTr is required to improve AP scores to the level of Faster R-CNN - 32%.**
